@@ -27,7 +27,7 @@ if(!(Test-Path -Path $Path))
 
 #Get All Hyper-V Binary Name in patch
 
-$hyperv_dirs  = Get-ChildItem -Path (Get-ChildItem -Path $Path -Filter "*KB*" -Attribute Directory) -Filter "$Arch*hyperv*" -Attribute Directory
+$hyperv_dirs  = Get-ChildItem -Path $Path -Filter "$Arch*hyperv*" -Attribute Directory -Recurse
 $bins = @()
 
 foreach($h in $hyperv_dirs)

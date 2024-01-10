@@ -633,7 +633,7 @@ if __name__ == '__main__':
         else:
             print_info('Normal local files with smaller version found:')
             print (tabulate(m))
-            normal_file = m[0]
+            normal_file = m[-1]
 
             ext = fname.split(".")[-1]
             tmp_fname = "".join(fname.split(".")[:-1]) + "_target." + ext

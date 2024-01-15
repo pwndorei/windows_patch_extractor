@@ -626,21 +626,17 @@ if __name__ == '__main__':
                 return True
 
         m: Iterable[UpdateFile] = list(local_scanner.search_all_normal(fname, platform, func))
+        ext = fname.split(".")[-1]
+        tmp_fname = "".join(fname.split(".")[:-1]) + "_patched." + ext
+
+        #with open(os.path.join(out_dir, fname) + '_2', 'wb') as f:
+        with open(os.path.join(out_dir, tmp_fname), 'wb') as f:
+            f.write(file_data)
         #m += list(local_scanner2.search_all_normal(fname, platform, func))
-        if len(m) == 0:
-            print_error('Can\'t find local file with smaller version')
-            raise Exception('diff failed')
-        else:
+        if len(m) > 0:
             print_info('Normal local files with smaller version found:')
             print (tabulate(m))
             normal_file = m[-1]
-
-            ext = fname.split(".")[-1]
-            tmp_fname = "".join(fname.split(".")[:-1]) + "_target." + ext
-
-            #with open(os.path.join(out_dir, fname) + '_2', 'wb') as f:
-            with open(os.path.join(out_dir, tmp_fname), 'wb') as f:
-                f.write(file_data)
 
             print_info(f'Copying {normal_file.path} to {out_dir}')
             shutil.copy(normal_file.path, os.path.join(out_dir, fname))

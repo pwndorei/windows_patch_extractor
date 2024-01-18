@@ -2,21 +2,11 @@
 
 Param(
     [Parameter(Mandatory=$true)]
-    [String]$Path, #path to expand directory
+    [String]$Path, #path to expanded directory
     $Arch = "amd64"
 )
 
 $magic = Join-Path $PSScriptRoot "magic.py"
-
-function Compare-Binary($First, $Second)
-{
-
-}
-
-function ConvertTo-Forward($Name)
-{
-    $cmdline
-}
 
 
 if(!(Test-Path -Path $Path))
@@ -48,8 +38,9 @@ foreach($b in $bins)
     {
         continue
     }
-    $cmdline = "$magic -diff $b $Arch $Path"
-    Write-Verbose "diff $b"
+    #$cmdline = "$magic -diff $b $Arch $Path"
+    $cmdline = "$magic -extract $b $Arch $Path"
+    Write-Verbose "patch $b"
 
     $proc = Start-Process "python.exe" -ArgumentList $cmdline -PassThru -NoNewWindow
     Wait-Process -Id $proc.Id

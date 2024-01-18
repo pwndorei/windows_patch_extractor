@@ -9,7 +9,6 @@ Param(
 
 function New-IDB($Bin)
 {
-
 	if($Arch -eq "amd64")
 	{
 		$IDA = Join-Path $IDA "idat64.exe"
@@ -18,19 +17,15 @@ function New-IDB($Bin)
 	{
 		$IDA = Join-Path $IDA "idat.exe"
 	}
-	Write-Host $IDA
-	Test-Path $IDA
 	foreach($b in $Bin)
 	{
-		if($b.Extension -ne ".exe" -and $b.Extension -ne ".dll" -and $b.Extension -ne ".sys")
+		if($b.Extension -eq ".exe" -or $b.Extension -eq ".dll" -or $b.Extension -eq ".sys")
 		{
-			$b.Extension
-			continue
-		}
-		$path = $b.FullName
-		$arg = "-B $path"
+			$path = $b.FullName
+			$arg = "-B $path"
 
-		Wait-Process -Id (Start-Process $IDA -ArgumentList $arg -PassThru -NoNewWindow).Id
+			Wait-Process -Id (Start-Process $IDA -ArgumentList $arg -PassThru -NoNewWindow).Id
+		}
 	}
 
 }
@@ -40,8 +35,5 @@ function New-IDB($Bin)
 $primary = Get-ChildItem -Path (Join-Path $Path "primary")
 $secondary = Get-ChildItem -Path (Join-Path $Path "secondary")
 
-$primary_job = Start-Job -ScriptBlock {New-IDB -Bin $input} -Name "Primary-IDB-generator" -InputObject $primary
-$secondary_job = Start-Job -ScriptBlock {New-IDB -Bin $input} -Name "Secondary-IDB-generator" -InputObject $secondary
-
-$primary_job | Wait-Job
-$secondary_job | Wait-Job
+New-IDB -Bin $primary
+New-IDB -Bin $secondary
